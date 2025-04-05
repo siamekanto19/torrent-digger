@@ -1,40 +1,46 @@
 'use client'
-import { api } from '@/trpc/react'
-import React from 'react'
-import { toast } from 'sonner'
+import { Input } from '@/components/ui/input'
+import React, { useState } from 'react'
+import { Search } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 function Home() {
-  const { data, isLoading } = api.torrent.searchByKeyword.useQuery({
-    keyword: 'mia malkova',
-    maxLimit: 250,
-  })
+  const [keyword, setKeyword] = useState('')
 
-  const { mutateAsync } = api.torrent.findMagnetLink.useMutation()
-
-  const handleMagnetLink = (url: string) => {
-    toast.promise(() => mutateAsync({ url }), {
-      loading: 'Trying to find Magnet Link...',
-      success: () => `Magnet Link copied to your clipboard`,
-      error: `Could not find Magnet Link`,
-    })
+  const handleAutoSearch = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      const searchKeyword = keyword.trim()
+      if (searchKeyword) {
+        window.location.href = `/search/?q=${searchKeyword}`
+      }
+    }
   }
 
-  if (isLoading) {
-    return <div>Loading...</div>
+  const handleSearch = () => {
+    const searchKeyword = keyword.trim()
+    if (searchKeyword) {
+      window.location.href = `/search/?q=${searchKeyword}`
+    }
   }
 
   return (
-    <div className='container mx-auto'>
-      <div className='flex flex-col gap-2 text-sm'>
-        <div className='bg-yellow-400'>{data?.torrents.length}</div>
-        {data?.torrents.map((tor) => (
-          <div className='text-lg font-semibold' key={tor.link}>
-            {tor.name} <div>-- {tor.provider} ---</div>
-            <button onClick={() => handleMagnetLink(tor.link)} className='bg-red-500'>
-              magnet
-            </button>
-          </div>
-        ))}
+    <div className='min-h-screen x-container flex flex-col items-center justify-center'>
+      <div className='flex items-center text-4xl xl:text-5xl 2xl:text-6xl font-extrabold text-emerald-700'>
+        <h1>Torrent Digger</h1>
+      </div>
+      <div className='w-full flex flex-col items-center pt-8'>
+        <div className='w-full md:w-10/12 lg:w-2/3 mx-auto relative h-14 flex items-center'>
+          <Input
+            onKeyUp={handleAutoSearch}
+            className='w-full h-14 !text-lg !font-medium px-5 rounded-full shadow-none border-primary border-[1.5px]'
+            value={keyword}
+            placeholder='Enter keyword...'
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <button onClick={handleSearch} disabled={!keyword.length} className='bg-primary size-14 rounded-full absolute right-0 flex justify-center items-center cursor-pointer hover:opacity-90'>
+            <Search className='text-white' size={22} absoluteStrokeWidth strokeWidth={1.5} />
+          </button>
+        </div>
       </div>
     </div>
   )
