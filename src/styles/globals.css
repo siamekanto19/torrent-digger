@@ -126,6 +126,6 @@
 
 @layer utilities {
   .x-container {
-    @apply w-11/12 sm:w-10/12 lg:w-2/3 mx-auto;
+    @apply w-11/12 sm:w-10/12 lg:w-2/3 2xl:w-1/2 mx-auto;
   }
 }

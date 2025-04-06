@@ -1,7 +1,7 @@
 'use client'
 import { Input } from '@/components/ui/input'
 import React, { useState } from 'react'
-import { Search } from 'lucide-react'
+import { Pyramid, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 function Home() {
@@ -25,19 +25,20 @@ function Home() {
 
   return (
     <div className='min-h-screen x-container flex flex-col items-center justify-center'>
-      <div className='flex items-center text-4xl xl:text-5xl 2xl:text-6xl font-extrabold text-emerald-700'>
+      <div className='flex items-center text-5xl 2xl:text-6xl font-extrabold text-emerald-700'>
+        <Pyramid size={75} className='text-primary' />
         <h1>Torrent Digger</h1>
       </div>
       <div className='w-full flex flex-col items-center pt-8'>
         <div className='w-full md:w-10/12 lg:w-2/3 mx-auto relative h-14 flex items-center'>
           <Input
             onKeyUp={handleAutoSearch}
-            className='w-full h-14 !text-lg !font-medium px-5 rounded-full shadow-none border-primary border-[1.5px]'
+            className='w-full h-14 !text-lg !font-medium pl-5 pr-16 shadow-none border-primary border-[1.5px]'
             value={keyword}
             placeholder='Enter keyword...'
             onChange={(e) => setKeyword(e.target.value)}
           />
-          <button onClick={handleSearch} disabled={!keyword.length} className='bg-primary size-14 rounded-full absolute right-0 flex justify-center items-center cursor-pointer hover:opacity-90'>
+          <button onClick={handleSearch} disabled={!keyword.length} className='bg-primary rounded-r-md size-14 absolute right-0 flex justify-center items-center cursor-pointer hover:opacity-90'>
             <Search className='text-white' size={22} absoluteStrokeWidth strokeWidth={1.5} />
           </button>
         </div>
