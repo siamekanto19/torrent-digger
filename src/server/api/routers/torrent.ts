@@ -12,6 +12,9 @@ export const torrentRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
+      if (!input.keyword) {
+        return { torrents: [] }
+      }
       const torrents = await getTorrents(input.keyword, input.maxLimit)
       return { torrents }
     }),

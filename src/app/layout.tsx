@@ -1,8 +1,9 @@
 import '@/styles/globals.css'
 import { type Metadata } from 'next'
-import { Urbanist } from 'next/font/google'
+import { Urbanist, Outfit } from 'next/font/google'
 import { TRPCReactProvider } from '@/trpc/react'
 import { Toaster } from 'sonner'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 export const metadata: Metadata = {
   title: 'Torrent Digger | Search Torrents Easily',
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   publisher: 'Torrent Digger',
 }
 
-const urbanist = Urbanist({
+const urbanist = Outfit({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   subsets: ['latin'],
 })
@@ -21,8 +22,10 @@ const urbanist = Urbanist({
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang='en' className={urbanist.className}>
-      <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+      <body className='dark'>
+        <TRPCReactProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </TRPCReactProvider>
         <Toaster position='bottom-right' />
       </body>
     </html>

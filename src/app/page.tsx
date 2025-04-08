@@ -2,7 +2,6 @@
 import { Input } from '@/components/ui/input'
 import React, { useState } from 'react'
 import { Pyramid, Search } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 function Home() {
   const [keyword, setKeyword] = useState('')
@@ -11,7 +10,7 @@ function Home() {
     if (event.key === 'Enter') {
       const searchKeyword = keyword.trim()
       if (searchKeyword) {
-        window.location.href = `/search/?q=${searchKeyword}`
+        window.location.href = `/search/?keyword=${searchKeyword}`
       }
     }
   }

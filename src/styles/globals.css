@@ -1,11 +1,10 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 :root {
@@ -16,7 +15,7 @@
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.51 0.10 166);
+  --primary: oklch(0.51 0.1 166);
   --primary-foreground: oklch(0.984 0.003 247.858);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
@@ -27,7 +26,7 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.929 0.013 255.508);
   --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.51 0.10 166);
+  --ring: oklch(0.51 0.1 166);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -50,7 +49,7 @@
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.51 0.10 166);
+  --primary: oklch(0.51 0.1 166);
   --primary-foreground: oklch(0.208 0.042 265.755);
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
@@ -61,7 +60,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.51 0.10 166);
+  --ring: oklch(0.51 0.1 166);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -120,12 +119,12 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overscroll-none;
   }
 }
 
 @layer utilities {
   .x-container {
-    @apply w-11/12 sm:w-10/12 lg:w-2/3 2xl:w-1/2 mx-auto;
+    @apply w-11/12 sm:w-10/12 mx-auto;
   }
 }

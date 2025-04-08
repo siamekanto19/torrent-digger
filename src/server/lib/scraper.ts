@@ -1,15 +1,52 @@
 import * as cheerio from 'cheerio'
-import type { Torrent, TorrentProvider } from '@/types'
+import type { Categories, Torrent, TorrentProvider } from '@/types'
 
-const getQueryUrl = (keyword: string, provider: TorrentProvider, page: number): string => {
+const getCategoryString = (provider: TorrentProvider) => {
+  if (provider === 'rarbg') {
+    const output: Record<Categories, string> = {
+      Movies: 'movies',
+      TV: 'tv',
+      Games: 'games',
+      Music: 'music',
+      Applications: 'apps',
+      Other: 'other',
+      XXX: 'xxx',
+    }
+
+    return output
+  }
+  const output: Record<Categories, string> = {
+    Movies: 'Movies',
+    TV: 'TV',
+    Games: 'Games',
+    Music: 'Music',
+    Applications: 'Apps',
+    Other: 'Other',
+    XXX: 'XXX',
+  }
+
+  return output
+}
+
+const getQueryUrl = (keyword: string, provider: TorrentProvider, page: number, category?: Categories): string => {
   if (provider === '1337x') {
-    const baseUrl = 'https://1337x.to/search/'
     const formattedKeyword = encodeURIComponent(keyword).replace(/%20/g, '+')
-    return new URL(`${formattedKeyword}/${page}/`, baseUrl).toString()
+    if (category) {
+      const query = getCategoryString(provider)
+      const url = `https://1337x.to/category-search/${formattedKeyword}/${query[category]}/${page}/`
+      return url
+    }
+    const url = `https://1337x.to/search/${formattedKeyword}/${page}/`
+    return url
   }
 
   if (provider === 'rarbg') {
     const formattedKeyword = encodeURIComponent(keyword).replace(/%20/g, '+')
+    if (category) {
+      const query = getCategoryString(provider)
+      const url = `https://rargb.to/search/?search=${formattedKeyword}&category%5B%5D=${query[category]}&order=seeders&by=DESC`
+      return url
+    }
     const url = `https://rargb.to/search/${page}/?search=${formattedKeyword}&order=seeders&by=DESC`
     return url
   }
@@ -23,7 +60,7 @@ const getQueryUrl = (keyword: string, provider: TorrentProvider, page: number): 
   return ''
 }
 
-export const getTorrents = async (keyword: string, limit: number, providers?: TorrentProvider[]) => {
+export const getTorrents = async (keyword: string, limit: number, category?: Categories, providers?: TorrentProvider[]) => {
   let page = 1
   let results = []
   const sources: TorrentProvider[] = providers ? providers : ['1337x', 'rarbg', 'limetorrent']
@@ -31,7 +68,7 @@ export const getTorrents = async (keyword: string, limit: number, providers?: To
 
   while (results.length < limit) {
     if (sources.includes('1337x') && page % 2 !== 0) {
-      const url = getQueryUrl(keyword, '1337x', page)
+      const url = getQueryUrl(keyword, '1337x', page, category)
       const pageResults: Torrent[] = []
       try {
         const response = await fetch(url)
@@ -49,7 +86,7 @@ export const getTorrents = async (keyword: string, limit: number, providers?: To
           const providerName = '1337x'
           const torrentLink = `https://1337x.to${link}`
 
-          pageResults.push({ name, link: torrentLink, seeds, leeches, date, size, provider: providerName })
+          pageResults.push({ name, link: torrentLink, seeds, leeches, date, size, provider: providerName, category })
         })
 
         if (pageResults.length < 1) {
@@ -63,7 +100,7 @@ export const getTorrents = async (keyword: string, limit: number, providers?: To
     }
 
     if (sources.includes('rarbg') && page % 2 === 0) {
-      const url = getQueryUrl(keyword, 'rarbg', page)
+      const url = getQueryUrl(keyword, 'rarbg', page, category)
       const pageResults: Torrent[] = []
       try {
         const response = await fetch(url)
@@ -73,7 +110,6 @@ export const getTorrents = async (keyword: string, limit: number, providers?: To
         $('tr.lista2').each((index, element) => {
           const name = $(element).find('td.lista:nth-child(2) a').first().text().trim()
           const link = $(element).find('td.lista:nth-child(2) a').first().attr('href') || ''
-          const category = $(element).find('td.lista:nth-child(3)').text().trim()
           const date = $(element).find('td.lista:nth-child(4)').text().trim()
           const size = $(element).find('td.lista:nth-child(5)').text().trim()
           const seeds = $(element).find('td.lista:nth-child(6)').text().trim()
@@ -102,7 +138,7 @@ export const getTorrents = async (keyword: string, limit: number, providers?: To
     }
 
     if (sources.includes('limetorrent') && !isLimeTorrentSearchDone && page % 3 === 0) {
-      const url = getQueryUrl(keyword, 'limetorrent', page)
+      const url = getQueryUrl(keyword, 'limetorrent', page, category)
       const pageResults: Torrent[] = []
       try {
         const response = await fetch(url)
@@ -124,6 +160,7 @@ export const getTorrents = async (keyword: string, limit: number, providers?: To
             seeds,
             leeches,
             provider: 'limetorrent',
+            category,
           })
         })
 
